@@ -95,13 +95,15 @@ The format of the IPv6 Captive-Portal DHCP option is shown below.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |          option-code          |           option-len          |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-.                                                               .
-.                                                               .
-.                                                               .
-.                          DNS Servers                          .
-.                                                               .
-.                                                               .
-.                                                               .
+|                                                               |
++                                                               +
+|                                                               |
++                           DNS Server                          +
+|                                                               |
++                                                               +
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 
@@ -109,16 +111,10 @@ option-code:
  : TODO (two octets)
 
 option-len:
- : 8-bit unsigned integer representing the entire length of all fields, in units
-   of 8 bytes. The minimum value is 3 if one DNS server is contained in the
-   option. Every additional DNS server increases the length by 2. This field is
-   used by the receiver to determine the number of DNS server addresses in the
-   option.
+ : Length of the list of DNS servers in octects, which MUST be a multiple of 16.
 
 DNS Servers:
- : One or more IPv6 addresses of the DNS servers. The number of addresses is
-   determined by the Length field. That is, the number of addresses is equal to
-   (Length - 1) / 2.
+ : IPv6 addresses of DNS servers.
 
 ## The DoT IPv6 RA Option
 
