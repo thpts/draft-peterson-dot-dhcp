@@ -22,6 +22,9 @@ normative:
     RFC8174:
 
 informative:
+    RFC2131:
+    RFC3646:
+    RFC8106:
     bootp-registry:
         title: "Dynamic Host Configuration Protocol (DHCP) and Bootstrap Protocol (BOOTP) Parameters"
         target: http://www.iana.org/assignments/bootp-dhcp-parameters
@@ -42,7 +45,10 @@ Layer Security (TLS).
 
 # Introduction
 
-TODO: Talk about how existing, non-DoT resolvers are provided.
+DHCPv4 {{RFC2131}}, DHCPv6 {{RFC3646}}, and IPv6 Router Announcements
+{{RFC8106}} all provide means to inform clients of available resolvers using
+the incumbent DNS protocol for querying, however there is no means of specifying
+alternate protocols to perform DNS queries.
 
 # Conventions and Definitions
 
@@ -53,7 +59,6 @@ when, and only when, they appear in all capitals, as shown here.
 
 # The DNS over TLS Option
 
-
 ## IPv4 DHCP Option
 
 The format of the IPv4 DoT DHCP option is shown below.
@@ -62,28 +67,22 @@ The format of the IPv4 DoT DHCP option is shown below.
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      Code     |      Len      |                               .
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               .
-.                                                               .
-.                          DNS Servers                          .
-.                                                               .
+|      Code     |      Len      |                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               |
+|                                                               |
+|                          DNS Servers                          |
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 
 Code:
- : The DoT DHCPv4 option (one octet).
+ : The DoT DHCPv4 option (one octet)
 
 Length:
- : 8-bit unsigned integer representing the entire length of all fields, in units
-   of 8 bytes. The minimum value is 3 if one DNS server is contained in the
-   option. Every additional DNS server increases the length by 2. This field is
-   used by the receiver to determine the number of DNS server addresses in the
-   option.
+ : Length of the DNS Servers list in octects
 
 DNS Servers:
- : One or more IPv4 addresses of the DNS servers. The number of addresses is
-   determined by the Length field. That is, the number of addresses is equal to
-   (Length - 1) / 2.
+ : One or more IPv4 addresses of DNS servers
 
 ## IPv6 DHCP Option
 
@@ -96,14 +95,9 @@ The format of the IPv6 Captive-Portal DHCP option is shown below.
 |          option-code          |           option-len          |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-+                                                               +
+|                           DNS Servers                         |
 |                                                               |
-+                           DNS Server                          +
 |                                                               |
-+                                                               +
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                              ...                              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 
@@ -111,10 +105,10 @@ option-code:
  : TODO (two octets)
 
 option-len:
- : Length of the list of DNS servers in octects, which MUST be a multiple of 16.
+ : Length of the list of DNS servers in octects, which MUST be a multiple of 16
 
 DNS Servers:
- : IPv6 addresses of DNS servers.
+ : IPv6 addresses of DNS servers
 
 ## The DoT IPv6 RA Option
 
@@ -124,15 +118,11 @@ The format of the DoT Router Advertisement option is shown below.
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      Type     |      Len      |                               .
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               .
-.                                                               .
-.                                                               .
-.                                                               .
-.                          DNS Servers                          .
-.                                                               .
-.                                                               .
-.                                                               .
+|      Type     |      Len      |                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               |
+|                                                               |
+|                          DNS Servers                          |
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 
@@ -147,7 +137,7 @@ Length:
    option.
 
 DNS Servers:
- : One or more IPv6 addresses of the DNS servers. The number of addresses is
+ : One or more IPv6 addresses of DNS servers. The number of addresses is
    determined by the Length field. That is, the number of addresses is equal to
    (Length - 1) / 2.
 
