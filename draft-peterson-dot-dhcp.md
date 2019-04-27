@@ -1,7 +1,7 @@
 ---
 title: "DNS over Transport Layer Security announcements using DHCP or Router Advertisements"
 abbrev: "DoT using DHCP or Router Advertisements"
-docname: draft-peterson-doh-dhcp-latest
+docname: draft-peterson-dot-dhcp-latest
 date: {DATE}
 author:
     -
