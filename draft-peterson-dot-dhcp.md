@@ -48,7 +48,7 @@ TODO: Talk about how existing, non-DoT resolvers are provided.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8175}}
+document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}}
 when, and only when, they appear in all capitals, as shown here.
 
 # The DNS over TLS Option
@@ -59,7 +59,7 @@ when, and only when, they appear in all capitals, as shown here.
 The format of the IPv4 DoT DHCP option is shown below.
 
 ~~~
- 0                   1                   2                   3  
+ 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |      Code     |      Len      |                               .
@@ -70,7 +70,7 @@ The format of the IPv4 DoT DHCP option is shown below.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 
-Code: 
+Code:
  : The DoT DHCPv4 option (one octet).
 
 Length:
@@ -90,7 +90,7 @@ DNS Servers:
 The format of the IPv6 Captive-Portal DHCP option is shown below.
 
 ~~~
- 0                   1                   2                   3  
+ 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |          option-code          |           option-len          |
@@ -125,7 +125,7 @@ DNS Servers:
 The format of the DoT Router Advertisement option is shown below.
 
 ~~~
- 0                   1                   2                   3  
+ 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |      Type     |      Len      |                               .
@@ -140,10 +140,10 @@ The format of the DoT Router Advertisement option is shown below.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
 
-Type: 
+Type:
  : TODO (one octet)
 
-Length: 
+Length:
  : 8-bit unsigned integer representing the entire length of all fields, in units
    of 8 bytes. The minimum value is 3 if one DNS server is contained in the
    option. Every additional DNS server increases the length by 2. This field is
