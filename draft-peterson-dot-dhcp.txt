@@ -3,14 +3,14 @@
 
 
 Network Working Group                                        T. Peterson
-Internet-Draft                                            April 27, 2019
+Internet-Draft                                               May 3, 2019
 Intended status: Standards Track
-Expires: October 29, 2019
+Expires: November 4, 2019
 
 
   DNS over Transport Layer Security announcements using DHCP or Router
                              Advertisements
-                       draft-peterson-dot-dhcp-00
+                     draft-peterson-dot-dhcp-latest
 
 Abstract
 
@@ -33,7 +33,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 29, 2019.
+   This Internet-Draft will expire on November 4, 2019.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Peterson                Expires October 29, 2019                [Page 1]
+Peterson                Expires November 4, 2019                [Page 1]
 
-Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
+Internet-Draft   DoT using DHCP or Router Advertisements        May 2019
 
 
 Table of Contents
@@ -70,7 +70,7 @@ Table of Contents
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   4
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .   4
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   4
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
    Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   5
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
 
@@ -109,14 +109,18 @@ Table of Contents
 
 
 
-Peterson                Expires October 29, 2019                [Page 2]
+Peterson                Expires November 4, 2019                [Page 2]
 
-Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
+Internet-Draft   DoT using DHCP or Router Advertisements        May 2019
 
 
-   Length:  Length of the DNS Servers list in octects
+   Len:  Length of the DNS Servers list in octects.  If the length is
+      set to 0 the DHCP server MUST transmit a Domain Name Server Option
+      message [RFC2132], which the client will infer as all hosts
+      provided in that option as capable of answering queries with DoT.
 
-   DNS Servers:  One or more IPv4 addresses of DNS servers
+   DNS Servers:  IPv4 addresses of DNS servers.  This field is optional
+      and MUST not be set if the Len field is set to 0.
 
 3.2.  IPv6 DHCP Option
 
@@ -136,9 +140,13 @@ Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
    option-code:  TODO (two octets)
 
    option-len:  Length of the list of DNS servers in octects, which MUST
-      be a multiple of 16
+      be a multiple of 16, or set to 0.  When this value is 0 the DHCP
+      server MUST transmit a DNS Recursive Name Server option [RFC3646],
+      which the client will infer as all hosts provided in that option
+      as capable of answering queries with DoT.
 
-   DNS Servers:  IPv6 addresses of DNS servers
+   DNS Servers:  IPv6 addresses of DNS servers.  This field is optional
+      and MUST not be set if the option-len field is set to 0.
 
 3.3.  The DoT IPv6 RA Option
 
@@ -154,25 +162,31 @@ Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+
+
+
+Peterson                Expires November 4, 2019                [Page 3]
+
+Internet-Draft   DoT using DHCP or Router Advertisements        May 2019
+
+
    Type:  TODO (one octet)
 
-   Length:  8-bit unsigned integer representing the entire length of all
-      fields, in units of 8 bytes.  The minimum value is 3 if one DNS
-      server is contained in the option.  Every additional DNS server
-      increases the length by 2.  This field is used by the receiver to
-      determine the number of DNS server addresses in the option.
+   Len:  8-bit unsigned integer representing the entire length of all
+      fields, in units of 8 bytes.  The minimum value is 0, and 3 if one
+      DNS server is contained in the option.  Every additional DNS
+      server increases the length by 2.  This field is used by the
+      receiver to determine the number of DNS server addresses in the
+      option.  Where the value is set to 0, The IPv6 Router MUST
+      transmit a Recursive DNS Server Option [RFC8106], which the client
+      will infer as all hosts provided in that option as capable of
+      answering queries with DoT.
 
-
-
-
-Peterson                Expires October 29, 2019                [Page 3]
-
-Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
-
-
-   DNS Servers:  One or more IPv6 addresses of DNS servers.  The number
-      of addresses is determined by the Length field.  That is, the
-      number of addresses is equal to (Length - 1) / 2.
+   DNS Servers:  One or more IPv6 addresses of DNS servers.  When the
+      Len value is not 0, the number of addresses is determined by the
+      Length field.  That is, the number of addresses is equal to
+      (Length - 1) / 2.  If the Len value is 0 this field MUST not be
+      set.
 
 4.  Security Considerations
 
@@ -204,6 +218,28 @@ Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+Peterson                Expires November 4, 2019                [Page 4]
+
+Internet-Draft   DoT using DHCP or Router Advertisements        May 2019
+
+
+   [RFC2132]  Alexander, S. and R. Droms, "DHCP Options and BOOTP Vendor
+              Extensions", RFC 2132, DOI 10.17487/RFC2132, March 1997,
+              <https://www.rfc-editor.org/info/rfc2132>.
+
+   [RFC3646]  Droms, R., Ed., "DNS Configuration options for Dynamic
+              Host Configuration Protocol for IPv6 (DHCPv6)", RFC 3646,
+              DOI 10.17487/RFC3646, December 2003,
+              <https://www.rfc-editor.org/info/rfc3646>.
+
+   [RFC8106]  Jeong, J., Park, S., Beloeil, L., and S. Madanapalli,
+              "IPv6 Router Advertisement Options for DNS Configuration",
+              RFC 8106, DOI 10.17487/RFC8106, March 2017,
+              <https://www.rfc-editor.org/info/rfc8106>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -219,13 +255,6 @@ Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
               "Dynamic Host Configuration Protocol for IPv6 (DHCPv6)",
               n.d., <http://www.iana.org/assignments/dhcpv6-parameters>.
 
-
-
-Peterson                Expires October 29, 2019                [Page 4]
-
-Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
-
-
    [icmpv6-registry]
               "Internet Control Message Protocol version 6 (ICMPv6)
               Parameters", n.d.,
@@ -234,16 +263,6 @@ Internet-Draft   DoT using DHCP or Router Advertisements      April 2019
    [RFC2131]  Droms, R., "Dynamic Host Configuration Protocol",
               RFC 2131, DOI 10.17487/RFC2131, March 1997,
               <https://www.rfc-editor.org/info/rfc2131>.
-
-   [RFC3646]  Droms, R., Ed., "DNS Configuration options for Dynamic
-              Host Configuration Protocol for IPv6 (DHCPv6)", RFC 3646,
-              DOI 10.17487/RFC3646, December 2003,
-              <https://www.rfc-editor.org/info/rfc3646>.
-
-   [RFC8106]  Jeong, J., Park, S., Beloeil, L., and S. Madanapalli,
-              "IPv6 Router Advertisement Options for DNS Configuration",
-              RFC 8106, DOI 10.17487/RFC8106, March 2017,
-              <https://www.rfc-editor.org/info/rfc8106>.
 
 Acknowledgments
 
@@ -258,23 +277,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Peterson                Expires October 29, 2019                [Page 5]
+Peterson                Expires November 4, 2019                [Page 5]
