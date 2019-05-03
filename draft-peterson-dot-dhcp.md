@@ -19,12 +19,13 @@ pi: [toc, sortrefs, symrefs]
 
 normative:
     RFC2119:
+    RFC2132:
+    RFC3646:
+    RFC8106:
     RFC8174:
 
 informative:
     RFC2131:
-    RFC3646:
-    RFC8106:
     bootp-registry:
         title: "Dynamic Host Configuration Protocol (DHCP) and Bootstrap Protocol (BOOTP) Parameters"
         target: http://www.iana.org/assignments/bootp-dhcp-parameters
@@ -78,11 +79,15 @@ The format of the IPv4 DoT DHCP option is shown below.
 Code:
  : The DoT DHCPv4 option (one octet)
 
-Length:
- : Length of the DNS Servers list in octects
+Len:
+ : Length of the DNS Servers list in octects. If the length is set to 0 the DHCP
+   server MUST transmit a Domain Name Server Option message {{RFC2132}}, which
+   the client will infer as all hosts provided in that option as capable of
+   answering queries with DoT.
 
 DNS Servers:
- : One or more IPv4 addresses of DNS servers
+ : IPv4 addresses of DNS servers. This field is optional and MUST not be set if
+   the Len field is set to 0.
 
 ## IPv6 DHCP Option
 
@@ -105,10 +110,14 @@ option-code:
  : TODO (two octets)
 
 option-len:
- : Length of the list of DNS servers in octects, which MUST be a multiple of 16
+ : Length of the list of DNS servers in octects, which MUST be a multiple of 16,
+   or set to 0. When this value is 0 the DHCP server MUST transmit a DNS
+   Recursive Name Server option {{RFC3646}}, which the client will infer as all
+   hosts provided in that option as capable of answering queries with DoT.
 
 DNS Servers:
- : IPv6 addresses of DNS servers
+ : IPv6 addresses of DNS servers. This field is optional and MUST not be set if
+   the option-len field is set to 0.
 
 ## The DoT IPv6 RA Option
 
@@ -129,17 +138,20 @@ The format of the DoT Router Advertisement option is shown below.
 Type:
  : TODO (one octet)
 
-Length:
+Len:
  : 8-bit unsigned integer representing the entire length of all fields, in units
-   of 8 bytes. The minimum value is 3 if one DNS server is contained in the
-   option. Every additional DNS server increases the length by 2. This field is
-   used by the receiver to determine the number of DNS server addresses in the
-   option.
+   of 8 bytes. The minimum value is 0, and 3 if one DNS server is contained in
+   the option. Every additional DNS server increases the length by 2. This field
+   is used by the receiver to determine the number of DNS server addresses in
+   the option. Where the value is set to 0, The IPv6 Router MUST transmit a
+   Recursive DNS Server Option {{RFC8106}}, which the client will infer as all
+   hosts provided in that option as capable of answering queries with DoT.
 
 DNS Servers:
- : One or more IPv6 addresses of DNS servers. The number of addresses is
-   determined by the Length field. That is, the number of addresses is equal to
-   (Length - 1) / 2.
+ : One or more IPv6 addresses of DNS servers. When the Len value is not 0, the
+   number of addresses is determined by the Length field. That is, the number of
+   addresses is equal to (Length - 1) / 2. If the Len value is 0 this field MUST
+   not be set.
 
 # Security Considerations
 
