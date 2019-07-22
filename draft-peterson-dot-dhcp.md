@@ -21,6 +21,7 @@ normative:
     RFC2119:
     RFC2132:
     RFC3646:
+    RFC6125:
     RFC8106:
     RFC8174:
 
@@ -35,6 +36,7 @@ informative:
     icmpv6-registry:
         title: "Internet Control Message Protocol version 6 (ICMPv6) Parameters"
         target: http://www.iana.org/assignments/icmpv6-parameters
+
 
 --- abstract
 
@@ -58,7 +60,20 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}}
 when, and only when, they appear in all capitals, as shown here.
 
+TODO: Make reference to draft-hoffman-dns-terminology-ter
+
+The maximum length of the DNS Host Name that can be carried in IPv4 DHCP is 255
+bytes, so DNS Host Names longer than 255 bytes SHOULD NOT be used in IPv6 DHCP
+or IPv6 RA.
+
 # The DNS over TLS Option
+
+The DoT DHCP/RA option informs the client that a DoT service is available for
+use for answering DNS queries using the same IP address(es) returned in Do53 DNS
+Server DHCP/RA options. Thus networks which announce DoT services MUST announce
+DNS resolver availability via their respective options, and provide a TLS
+certificate on the DoT service which passes verification ({{!RFC6125}}) against
+the DNS Host Name provided in the DoT DHCP/RA option.
 
 ## IPv4 DHCP Option
 
@@ -71,7 +86,7 @@ The format of the IPv4 DoT DHCP option is shown below.
 |      Code     |      Len      |                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               |
 |                                                               |
-|                          DNS Servers                          |
+|                          DNS Host Name                        |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
@@ -80,14 +95,10 @@ Code:
  : The DoT DHCPv4 option (one octet)
 
 Len:
- : Length of the DNS Servers list in octects. If the length is set to 0 the DHCP
-   server MUST transmit a Domain Name Server Option message {{RFC2132}}, which
-   the client will infer as all hosts provided in that option as capable of
-   answering queries with DoT.
+ : Length of the DNS Host Name
 
-DNS Servers:
- : IPv4 addresses of DNS servers. This field is optional and MUST not be set if
-   the Len field is set to 0.
+DNS Host Name:
+ :  The DNS Host Name
 
 ## IPv6 DHCP Option
 
@@ -100,8 +111,7 @@ The format of the IPv6 Captive-Portal DHCP option is shown below.
 |          option-code          |           option-len          |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
-|                           DNS Servers                         |
-|                                                               |
+|                           DNS Host Name                       |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
@@ -110,14 +120,10 @@ option-code:
  : TODO (two octets)
 
 option-len:
- : Length of the list of DNS servers in octects, which MUST be a multiple of 16,
-   or set to 0. When this value is 0 the DHCP server MUST transmit a DNS
-   Recursive Name Server option {{RFC3646}}, which the client will infer as all
-   hosts provided in that option as capable of answering queries with DoT.
+ : Length of the DNS Host Name, in octects
 
 DNS Servers:
- : IPv6 addresses of DNS servers. This field is optional and MUST not be set if
-   the option-len field is set to 0.
+ : The DNS Host Name
 
 ## The DoT IPv6 RA Option
 
@@ -130,7 +136,7 @@ The format of the DoT Router Advertisement option is shown below.
 |      Type     |      Len      |                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               |
 |                                                               |
-|                          DNS Servers                          |
+|                          DNS Host Name                        |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~
@@ -139,19 +145,15 @@ Type:
  : TODO (one octet)
 
 Len:
- : 8-bit unsigned integer representing the entire length of all fields, in units
-   of 8 bytes. The minimum value is 0, and 3 if one DNS server is contained in
-   the option. Every additional DNS server increases the length by 2. This field
-   is used by the receiver to determine the number of DNS server addresses in
-   the option. Where the value is set to 0, The IPv6 Router MUST transmit a
-   Recursive DNS Server Option {{RFC8106}}, which the client will infer as all
-   hosts provided in that option as capable of answering queries with DoT.
+ : The length of the DNS Host Name, in octets
 
-DNS Servers:
- : One or more IPv6 addresses of DNS servers. When the Len value is not 0, the
-   number of addresses is determined by the Length field. That is, the number of
-   addresses is equal to (Length - 1) / 2. If the Len value is 0 this field MUST
-   not be set.
+DNS Server:
+ : The DNS Host Name
+
+## DANE
+
+TODO: Put in considerations for using DANE and/or existing certificate
+authorities for trust anchoring.
 
 # Security Considerations
 
@@ -177,4 +179,4 @@ Option Formats" registry under ICMPv6 paramters {{icmpv6-registry}}.
 # Acknowledgments
 {:numbered="false"}
 
-TODO
+The author would like to acknowledge the extensive feedback from Martin Thomson.
