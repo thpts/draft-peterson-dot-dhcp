@@ -62,10 +62,6 @@ when, and only when, they appear in all capitals, as shown here.
 
 TODO: Make reference to draft-hoffman-dns-terminology-ter
 
-The maximum length of the DNS Host Name that can be carried in IPv4 DHCP is 255
-bytes, so DNS Host Names longer than 255 bytes SHOULD NOT be used in IPv6 DHCP
-or IPv6 RA.
-
 # The DNS over TLS Option
 
 The DoT DHCP/RA option informs the client that a DoT service is available for
