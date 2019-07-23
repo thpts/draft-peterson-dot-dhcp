@@ -60,11 +60,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}}
 when, and only when, they appear in all capitals, as shown here.
 
-TODO: Make reference to draft-hoffman-dns-terminology-ter
-
-The maximum length of the DNS Host Name that can be carried in IPv4 DHCP is 255
-bytes, so DNS Host Names longer than 255 bytes SHOULD NOT be used in IPv6 DHCP
-or IPv6 RA.
+"DoT", "Do53" and other related abbreviations follow the definitions as
+defined in {{!I-D.draft-hoffman-dns-terminology-ter-01}}.
 
 # The DNS over TLS Option
 
@@ -74,6 +71,10 @@ Server DHCP/RA options. Thus networks which announce DoT services MUST announce
 DNS resolver availability via their respective options, and provide a TLS
 certificate on the DoT service which passes verification ({{!RFC6125}}) against
 the DNS Host Name provided in the DoT DHCP/RA option.
+
+The maximum length of the DNS Host Name that can be carried in IPv4 DHCP is 255
+bytes, so DNS Host Names longer than 255 bytes SHOULD NOT be used in IPv6 DHCP
+or IPv6 RA.
 
 ## IPv4 DHCP Option
 
