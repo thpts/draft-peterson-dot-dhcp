@@ -151,7 +151,7 @@ Len:
 DNS Server:
  : The DNS Host Name
 
-## DANE
+## Trust Anchoring
 
 TODO: Put in considerations for using DANE and/or existing certificate
 authorities for trust anchoring.
