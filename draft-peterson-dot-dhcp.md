@@ -103,7 +103,7 @@ DNS Host Name:
 
 ## IPv6 DHCP Option
 
-The format of the IPv6 Captive-Portal DHCP option is shown below.
+The format of the IPv6 DHCP option is shown below.
 
 ~~~
  0                   1                   2                   3
