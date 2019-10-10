@@ -72,10 +72,6 @@ DNS resolver availability via their respective options, and provide a TLS
 certificate on the DoT service which passes verification ({{!RFC6125}}) against
 the DNS Host Name provided in the DoT DHCP/RA option.
 
-The maximum length of the DNS Host Name that can be carried in IPv4 DHCP is 255
-bytes, so DNS Host Names longer than 255 bytes SHOULD NOT be used in IPv6 DHCP
-or IPv6 RA.
-
 ## IPv4 DHCP Option
 
 The format of the IPv4 DoT DHCP option is shown below.
